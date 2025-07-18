@@ -5,7 +5,7 @@ from dto.dto_transaction import InputTransaction
 from enums.enum_tipe import Tipe
 from service.service_transaction import ServiceTransaction
 
-router_transaction = APIRouter(prefix="/api/v1")
+router_transaction = APIRouter(prefix="/api/v1", tags=["transaction"])
 
 @router_transaction.post("/transaction")
 def insert_new_transaction(input_transaction: InputTransaction, service_transaction: ServiceTransaction = Depends()):
