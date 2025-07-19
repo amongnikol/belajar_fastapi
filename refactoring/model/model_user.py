@@ -2,7 +2,7 @@
 from bson import ObjectId
 from pydantic import BaseModel, Field
 
-from refactoring.model.model_common import PyObjectId
+from model.model_common import PyObjectId
 
 class User(BaseModel):
     id: PyObjectId = Field(alias="_id")
