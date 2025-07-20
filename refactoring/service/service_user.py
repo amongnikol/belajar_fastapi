@@ -1,14 +1,19 @@
 from fastapi import Depends, HTTPException
 
 from dto.dto_user import InputLogin, InputUser
+from dto.dto_common import TokenData
+from service.service_jwt import ServiceJwt
 from service import service_security
 from repository.repository_user import RepositoryUser
 
 
 class ServiceUser:
-    def __init__(self, repository_user: RepositoryUser = Depends()) -> None:
+    def __init__(self, repository_user: RepositoryUser = Depends(), 
+                 service_jwt: ServiceJwt = Depends()
+                 ) -> None:
         self.repository_user = repository_user
         self.service_security = service_security
+        self.service_jwt = service_jwt
 
     def insert_new_user(self, input_user:InputUser):
         found_duplicate_username = self.repository_user.find_user_by_username(
@@ -37,4 +42,9 @@ class ServiceUser:
             input_login.password, found_user.password
         ):
             raise HTTPException(401, "password invalid")
-        return found_user
+        
+        # Generate jwt
+        jwt_token = self.service_jwt.create_access_token(
+            TokenData(userId=str(found_user.id), name=found_user.name).dict()
+        )
+        return jwt_token
