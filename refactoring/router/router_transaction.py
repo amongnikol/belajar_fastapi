@@ -19,6 +19,8 @@ def insert_new_transaction(input_transaction: InputTransaction,
     return input_transaction
 
 @router_transaction.get("/transaction")
-def get_list_transaction(tipe: Optional[Tipe] = None, service_transaction: ServiceTransaction = Depends()):
+def get_list_transaction(current_user: Annotated[TokenData, Depends(get_current_user)],
+                         tipe: Optional[Tipe] = None, 
+                         service_transaction: ServiceTransaction = Depends()):
 
-    return service_transaction.get_list_transaction(tipe)
+    return service_transaction.get_list_transaction(tipe, current_user)
